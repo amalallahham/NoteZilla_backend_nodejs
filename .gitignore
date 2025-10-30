@@ -1,0 +1,50 @@
+# ======================
+# Node & Environment
+# ======================
+node_modules/
+.env
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ======================
+# SQLite Database Files
+# ======================
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/*.db-journal
+
+# ======================
+# Logs & Temp
+# ======================
+logs/
+*.log
+tmp/
+temp/
+
+# ======================
+# Build & Runtime
+# ======================
+dist/
+build/
+coverage/
+.cache/
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ======================
+# Uploads (if you allow video/audio upload)
+# ======================
+uploads/
+uploads_temp/
+public/uploads/
+
+# ======================
+# OS / Misc
+# ======================
+Thumbs.db
