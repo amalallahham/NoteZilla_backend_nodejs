@@ -1,8 +1,13 @@
 const { run, get } = require("../db/db");
 
 const User = {
-  findByEmail(email) {
-    return get(`SELECT * FROM Users WHERE email = ?`, [email]);
+  async findByEmail(email) {
+    const user = await get(
+      `SELECT * FROM Users WHERE LOWER(email) = LOWER(?)`,
+      [email.trim()]
+    );
+    console.log("findByEmail:", email, "->", user);
+    return user;
   },
 
   findById(id) {

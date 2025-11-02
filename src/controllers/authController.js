@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'devsecret';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const register = async (req, res, next) => {
   try {
@@ -59,7 +59,11 @@ const login = async (req, res, next) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
+    console.log('Login attempt for email:', email); 
+
     const user = await User.findByEmail(email);
+
+    console.log('User found:', user); 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

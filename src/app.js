@@ -29,6 +29,9 @@ const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/videos');
 const adminRoutes = require('./routes/admin');
 
+
+
+
 app.use('/auth', authRoutes);
 app.use('/videos', videoRoutes);
 app.use('/admin', adminRoutes);
@@ -42,13 +45,16 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-migrate()
-  .then(() => {
+
+(async () => {
+  try {
+    await migrate();    
+                 
     app.listen(PORT, () => {
-      console.log(`Server is running at http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('Migration failed:', err);
     process.exit(1);
-  });
+  }
+})();
