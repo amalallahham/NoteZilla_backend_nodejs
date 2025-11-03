@@ -59,24 +59,10 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-<<<<<<< HEAD
-// ✅ Start server only after DB migrations
-migrate()
-  .then(() => {
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`✅ Server is running on port ${PORT} and accessible externally`);
-    });
-  })
-  .catch((err) => {
-    console.error('❌ Migration failed:', err);
-    setTimeout(() => process.exit(1), 3000);
-  });
-=======
-
 (async () => {
   try {
-    await migrate();    
-                 
+    await migrate();
+
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
@@ -85,4 +71,3 @@ migrate()
     process.exit(1);
   }
 })();
->>>>>>> 55451b56ffb3cbe66b80a811df227e5530de974a
