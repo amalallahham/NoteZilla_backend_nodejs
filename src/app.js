@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ✅ CORS setup (whitelist for Netlify + local dev)
 const allowedOrigins = [
-  'https://notezillafrontend.netlify.app', // your deployed frontend
+  'https://notezillafront.netlify.app', // your deployed frontend
   'http://localhost:5173' // local dev
 ];
 
