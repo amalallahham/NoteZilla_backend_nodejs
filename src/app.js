@@ -8,21 +8,31 @@ const { migrate } = require('./db/db');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT; // Railway provides this automatically
+const PORT = process.env.PORT || 3000; // Railway auto-injects this
 
 // ✅ Middleware
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ CORS setup
+// ✅ CORS setup (whitelist for Netlify + local dev)
+const allowedOrigins = [
+  'https://notezillafrontend.netlify.app', // your deployed frontend
+  'http://localhost:5173' // local dev
+];
+
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
+
   next();
 });
 
@@ -30,9 +40,6 @@ app.use((req, res, next) => {
 const authRoutes = require('./routes/auth');
 const videoRoutes = require('./routes/videos');
 const adminRoutes = require('./routes/admin');
-
-
-
 
 app.use('/auth', authRoutes);
 app.use('/videos', videoRoutes);
@@ -59,15 +66,18 @@ app.use((err, _req, res, _next) => {
   });
 });
 
+// ✅ Start server after migrations
 (async () => {
   try {
+    console.log('🚀 Running migrations...');
     await migrate();
+    console.log('✅ Migration complete, starting server...');
 
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Server running on port ${PORT} and accessible externally`);
     });
   } catch (err) {
-    console.error('Migration failed:', err);
-    process.exit(1);
+    console.error('❌ Migration failed:', err);
+    setTimeout(() => process.exit(1), 3000);
   }
 })();
