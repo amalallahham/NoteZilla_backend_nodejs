@@ -52,6 +52,7 @@ const uploadVideo = async (req, res) => {
       videoId: result.lastID,
       title,
       videoUrl: url,             // private URL; use SAS for playback
+      transcript: transcript,    // ✅ Include the actual transcript text
       transcriptLength: transcript.length,
       apiCalls: req.apiUsage?.total,
       remainingCalls: req.apiUsage?.remaining,
