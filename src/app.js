@@ -51,14 +51,18 @@ app.use((err, _req, res, _next) => {
 
 (async () => {
   try {
-    await migrate();
 
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`Server running on port ${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server listening on port ${PORT}`);
     });
 
+    // run migration AFTER we are already listening
+    migrate()
+      .then(() => console.log("Migration completed"))
+      .catch(err => console.error("Migration error:", err));
+
   } catch (err) {
-    console.error("Migration failed:", err);
+    console.error("Boot failure:", err);
     process.exit(1);
   }
 })();
