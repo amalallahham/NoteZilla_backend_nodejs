@@ -53,9 +53,10 @@ app.use((err, _req, res, _next) => {
   try {
     await migrate();
 
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on port ${PORT}`);
     });
+
   } catch (err) {
     console.error("Migration failed:", err);
     process.exit(1);
