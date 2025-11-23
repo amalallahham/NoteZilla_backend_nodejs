@@ -29,7 +29,7 @@ const User = {
   },
 
   //Checks if user has calls remaining
-  async hasApiCallsRemaining(userId, limit = 20) {
+  async hasApiCallsRemaining(userId, limit = 70) {
     const user = await get(`SELECT apiCalls FROM Users WHERE id = ?`, [userId]);
     if (!user) return false;
     return user.apiCalls < limit;

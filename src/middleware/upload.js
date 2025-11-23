@@ -3,6 +3,8 @@ const multer = require("multer");
 const {
   BlobServiceClient,
   StorageSharedKeyCredential,
+  BlobSASPermissions,
+  generateBlobSASQueryParameters,
 } = require("@azure/storage-blob");
 require("dotenv").config();
 
@@ -16,8 +18,8 @@ const upload = multer({
 });
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT;
-const accountKey  = process.env.AZURE_STORAGE_KEY;
-const container   = process.env.AZURE_BLOB_CONTAINER;
+const accountKey = process.env.AZURE_STORAGE_KEY;
+const container = process.env.AZURE_BLOB_CONTAINER;
 
 if (!accountName || !accountKey) {
   throw new Error("Missing AZURE_STORAGE_ACCOUNT or AZURE_STORAGE_KEY");
@@ -34,14 +36,34 @@ async function uploadToAzure(fileBuffer, originalName, mimeType) {
   await containerClient.createIfNotExists();
 
   const ext = (originalName?.split(".").pop() || "bin").toLowerCase();
-  const blobName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const blobName = `${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}.${ext}`;
   const blockBlob = containerClient.getBlockBlobClient(blobName);
 
   await blockBlob.uploadData(fileBuffer, {
     blobHTTPHeaders: { blobContentType: mimeType || "application/octet-stream" },
   });
 
-  return { blobName, url: blockBlob.url }; // Note: private if the container is private
+  // 🔐 Generate a READ-ONLY SAS URL (keeps container private)
+  const expiresOn = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  const startsOn = new Date(Date.now() - 5 * 60 * 1000); // 5 min clock skew
+
+  const sasToken = generateBlobSASQueryParameters(
+    {
+      containerName: container,
+      blobName,
+      permissions: BlobSASPermissions.parse("r"), // read permission
+      startsOn,
+      expiresOn,
+    },
+    sharedKeyCred
+  ).toString();
+
+  const sasUrl = `${blockBlob.url}?${sasToken}`;
+
+  // Return SAS URL instead of raw private URL
+  return { blobName, url: sasUrl };
 }
 
 module.exports = { upload, uploadToAzure };
