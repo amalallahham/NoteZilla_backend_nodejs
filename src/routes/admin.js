@@ -53,4 +53,22 @@ router.use(requireAuth, requireRole("admin"));
  */
 router.get("/users", dash.getAllUsers);
 
+/**
+ * @swagger
+ * /api/v1/admin/stats:
+ *   get:
+ *     summary: Get API endpoint statistics (Admin only)
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: API endpoint usage statistics
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin role required
+ */
+router.get("/stats", dash.getEndpointStats);
+
 module.exports = router;
