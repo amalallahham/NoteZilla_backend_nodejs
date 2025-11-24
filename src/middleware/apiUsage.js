@@ -1,10 +1,11 @@
 const User = require("../models/User");
+const messages = require("../lang/messages");
 
 const apiUsage = async (req, res, next) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return res.status(401).json({ error: "Unauthorized: missing user ID" });
+      return res.status(401).json({ error: messages.auth.unauthorized });
     }
 
     // Check if user has remaining API calls
@@ -13,8 +14,8 @@ const apiUsage = async (req, res, next) => {
     if (!hasCallsRemaining) {
       const currentCalls = await User.getApiCallsCount(userId);
       return res.status(403).json({
-        error: "API call limit exceeded",
-        message: "You have reached your maximum of 20 API calls",
+        error: messages.api.limitExceeded,
+        message: messages.api.limitMessage,
         currentCalls,
         maxCalls: 20,
       });
@@ -33,7 +34,7 @@ const apiUsage = async (req, res, next) => {
     next();
   } catch (err) {
     console.error("API usage middleware error:", err);
-    res.status(500).json({ error: "Failed to track API usage" });
+    res.status(500).json({ error: messages.api.failedToTrack });
   }
 };
 
