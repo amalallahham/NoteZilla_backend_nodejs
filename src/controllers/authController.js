@@ -83,7 +83,7 @@ const register = async (req, res, next) => {
             role: user.role,
           },
         },
-       messages.auth.registrationSuccess,
+        messages.auth.registrationSuccess,
       )
     );
   } catch (err) {
@@ -146,7 +146,7 @@ const login = async (req, res, next) => {
             role: user.role,
           },
         },
-      messages.auth.loginSuccess,
+        messages.auth.loginSuccess,
       )
     );
   } catch (err) {
