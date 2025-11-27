@@ -105,22 +105,17 @@ const getUserSummaries = async (req, res) => {
   }
 };
 
-
 const getVideoById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const video = await Video.findById(id); 
+    const video = await Video.findById(id);
 
     if (!video) {
-      return res
-        .status(404)
-        .json(ApiResponse.error("Video not found", 404));
+      return res.status(404).json(ApiResponse.error("Video not found", 404));
     }
 
-
     const plain = video.toJSON ? video.toJSON() : { ...video };
-
 
     return res
       .status(200)
@@ -138,7 +133,6 @@ const getVideoById = async (req, res) => {
   }
 };
 
-
 const updateVideoTitle = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -146,17 +140,13 @@ const updateVideoTitle = async (req, res) => {
     const { title } = req.body;
 
     if (!title || !title.trim()) {
-      return res
-        .status(400)
-        .json(ApiResponse.error("Title is required", 400));
+      return res.status(400).json(ApiResponse.error("Title is required", 400));
     }
 
     const video = await Video.findById(id);
 
     if (!video) {
-      return res
-        .status(404)
-        .json(ApiResponse.error("Video not found", 404));
+      return res.status(404).json(ApiResponse.error("Video not found", 404));
     }
 
     if (userId && video.userId && video.userId !== userId) {
@@ -166,17 +156,16 @@ const updateVideoTitle = async (req, res) => {
     }
 
     video.title = title.trim();
-    await (video.save ? video.save() : Video.updateById(id, { title: video.title }));
+    await (video.save
+      ? video.save()
+      : Video.updateById(id, { title: video.title }));
 
     const plain = video.toJSON ? video.toJSON() : { ...video };
 
     return res
       .status(200)
       .json(
-        ApiResponse.success(
-          { video: plain },
-          "Title updated successfully"
-        )
+        ApiResponse.success({ video: plain }, "Title updated successfully")
       );
   } catch (err) {
     console.error("Update video title error:", err);
@@ -194,9 +183,7 @@ const deleteVideo = async (req, res) => {
     const video = await Video.findById(id);
 
     if (!video) {
-      return res
-        .status(404)
-        .json(ApiResponse.error("Video not found", 404));
+      return res.status(404).json(ApiResponse.error("Video not found", 404));
     }
 
     if (userId && video.userId && video.userId !== userId) {
@@ -209,12 +196,7 @@ const deleteVideo = async (req, res) => {
 
     return res
       .status(200)
-      .json(
-        ApiResponse.success(
-          { id },
-          "Video deleted successfully"
-        )
-      );
+      .json(ApiResponse.success({ id }, "Video deleted successfully"));
   } catch (err) {
     console.error("Delete video error:", err);
     return res
@@ -223,5 +205,10 @@ const deleteVideo = async (req, res) => {
   }
 };
 
-
-module.exports = { uploadVideo, getUserSummaries, getVideoById , updateVideoTitle, deleteVideo};
+module.exports = {
+  uploadVideo,
+  getUserSummaries,
+  getVideoById,
+  updateVideoTitle,
+  deleteVideo,
+};

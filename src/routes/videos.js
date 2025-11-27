@@ -176,7 +176,6 @@ router.get("/summaries", requireAuth, getUserSummaries);
  */
 router.get("/summary/:id", requireAuth, getVideoById);
 
-
 router.put("/summary/:id", requireAuth, updateVideoTitle);
 
 /**
@@ -205,6 +204,5 @@ router.put("/summary/:id", requireAuth, updateVideoTitle);
  *         description: Video not found
  */
 router.delete("/summary/:id", requireAuth, deleteVideo);
-
 
 module.exports = router;
