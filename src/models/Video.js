@@ -19,6 +19,26 @@ class Video {
   static async findById(id) {
     return await get("SELECT * FROM Videos WHERE id = ?", [id]);
   }
+
+
+  static async updateById(id, fields) {
+  const keys = Object.keys(fields);
+  const values = Object.values(fields);
+
+  if (keys.length === 0) return null;
+
+  const setClause = keys.map((key) => `${key} = ?`).join(", ");
+
+  await run(
+    `UPDATE Videos
+     SET ${setClause}
+     WHERE id = ?`,
+    [...values, id]
+  );
+
+  return await get("SELECT * FROM Videos WHERE id = ?", [id]);
+}
+
 }
 
 module.exports = Video;

@@ -7,6 +7,7 @@ const {
   uploadVideo,
   getUserSummaries,
   getVideoById,
+  updateVideoTitle,
 } = require("../controllers/videoController");
 
 /**
@@ -173,5 +174,9 @@ router.get("/summaries", requireAuth, getUserSummaries);
  *         description: Video not found
  */
 router.get("/summary/:id", requireAuth, getVideoById);
+
+
+router.put("/summary/:id", requireAuth, updateVideoTitle);
+
 
 module.exports = router;
