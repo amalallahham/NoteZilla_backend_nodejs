@@ -93,6 +93,18 @@ async function migrate() {
     `);
     await run(`CREATE INDEX IF NOT EXISTS idx_videos_userId ON Videos(userId);`);
 
+    // API Stats table for endpoint usage tracking
+    await run(`
+      CREATE TABLE IF NOT EXISTS ApiStats (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        method     TEXT NOT NULL,
+        endpoint   TEXT NOT NULL,
+        count      INTEGER NOT NULL DEFAULT 0,
+        lastCalled TEXT NOT NULL DEFAULT (datetime('now'))
+      );
+    `);
+    await run(`CREATE UNIQUE INDEX IF NOT EXISTS ux_apistats_method_endpoint ON ApiStats(method, endpoint);`);
+
     // Seed admin deterministically
     const adminEmail = 'admin@admin.admin';
     const existing = await get(`SELECT id FROM Users WHERE LOWER(email) = LOWER(?)`, [adminEmail]);

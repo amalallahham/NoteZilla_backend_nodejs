@@ -8,6 +8,7 @@ const {
   getUserSummaries,
   getVideoById,
   updateVideoTitle,
+  deleteVideo,
 } = require("../controllers/videoController");
 
 /**
@@ -178,5 +179,31 @@ router.get("/summary/:id", requireAuth, getVideoById);
 
 router.put("/summaries/:id", requireAuth, updateVideoTitle);
 
+/**
+ * @swagger
+ * /videos/summary/{id}:
+ *   delete:
+ *     summary: Delete a video summary by ID
+ *     tags: [Videos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Video ID
+ *     responses:
+ *       200:
+ *         description: Video deleted successfully
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Not authorized to delete this video
+ *       404:
+ *         description: Video not found
+ */
+router.delete("/summary/:id", requireAuth, deleteVideo);
 
 module.exports = router;
