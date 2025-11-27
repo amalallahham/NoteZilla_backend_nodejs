@@ -39,6 +39,10 @@ class Video {
   return await get("SELECT * FROM Videos WHERE id = ?", [id]);
 }
 
+  static async deleteById(id) {
+    return await run("DELETE FROM Videos WHERE id = ?", [id]);
+  }
+
 }
 
 module.exports = Video;
