@@ -72,7 +72,7 @@ const uploadVideo = async (req, res) => {
     return res.status(201).json(
       ApiResponse.success(
         {
-          id: result.id,
+          id: result.lastID,
           title,
           videoUrl: url,
           transcriptSummary: summary,

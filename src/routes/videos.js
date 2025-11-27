@@ -176,7 +176,7 @@ router.get("/summaries", requireAuth, getUserSummaries);
 router.get("/summary/:id", requireAuth, getVideoById);
 
 
-router.put("/summary/:id", requireAuth, updateVideoTitle);
+router.put("/summaries/:id", requireAuth, updateVideoTitle);
 
 
 module.exports = router;
